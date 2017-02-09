@@ -1,0 +1,71 @@
+
+const Discord = require("discord.js");
+
+var talkModule = require('./talkModule');
+var wikiModule = require('./wikiModule');
+
+var dictionaries = require('./dictionaries');
+
+var request = require("request");
+
+const devToken = 'your_dev_token';
+const token = 'your_production_token';
+
+const bot = new Discord.Client();
+
+var isReconnected;
+
+bot.on("ready", () => {
+	console.log("wikiBot ready!");
+	isReconnected = false;
+});
+
+
+bot.on("message", message => {
+	silence = 0;
+
+	console.log(message.content);
+
+	var input = message.content;
+
+	if (input.includes("!wiki "))	
+		wikiModule.fetchInfo(message, input);
+});
+
+
+process.on("unhandledRejection", err => {
+  console.error("Uncaught Promise Error: \n" + err.stack);
+});
+
+
+bot.on("disconnect", () =>
+{
+    isReconnected = true;
+
+    setTimeout (Reconnect.bind(null, devToken), reconnectInterval);
+
+    if (owner)
+    {
+        owner.sendMessage("I have been disconnected!");
+    }
+});
+
+bot.on("reconnecting", () =>
+{
+    if (owner)
+    {
+        owner.sendMessage("Trying to reconnect...");
+    }
+});
+
+function Reconnect(devToken)
+{
+    if (isReconnected == true)
+    {
+        bot.login(devToken);
+    }
+}
+
+bot.login(devToken);
+
+
