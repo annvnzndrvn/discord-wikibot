@@ -11,7 +11,7 @@ var request = require("request");
 const devToken = 'your_dev_token';
 const token = 'your_production_token';
 
-const bot = new Discord.Client();
+const bot = new Discord.Client({autoReconnect:true});
 
 var isReconnected;
 
@@ -40,32 +40,13 @@ process.on("unhandledRejection", err => {
 
 bot.on("disconnect", () =>
 {
-    isReconnected = true;
 
-    setTimeout (Reconnect.bind(null, devToken), reconnectInterval);
-
-    if (owner)
-    {
-        owner.sendMessage("I have been disconnected!");
-    }
 });
 
 bot.on("reconnecting", () =>
 {
-    if (owner)
-    {
-        owner.sendMessage("Trying to reconnect...");
-    }
+
 });
 
-function Reconnect(devToken)
-{
-    if (isReconnected == true)
-    {
-        bot.login(devToken);
-    }
-}
 
 bot.login(devToken);
-
-
